@@ -64,6 +64,7 @@ const actualizarPaciente = async(req,res)=>{
     res.status(200).json({msg:"Actualización exitosa del paciente"})
 }
 
+
 const eliminarPaciente = async (req,res)=>{
     const {id} = req.params
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
@@ -72,7 +73,6 @@ const eliminarPaciente = async (req,res)=>{
     await Paciente.findByIdAndUpdate(req.params.id,{salida:Date.parse(salida),estado:false})
     res.status(200).json({msg:"Fecha de salida del paciente registrado exitosamente"})
 }
-
 export {
 		loginPaciente,
 		perfilPaciente,
