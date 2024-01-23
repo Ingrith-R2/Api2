@@ -2,8 +2,12 @@
 import Tratamiento from "../models/Tratamiento.js"
 import mongoose from "mongoose";
 
-const detalleTratamiento = (req,res)=>{
-    res.send("Detalle del tratamiento")
+
+const detalleTratamiento = async(req,res)=>{
+    const {id} = req.params
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, no existe ese tratamiento`});
+    const tratamiento = await Tratamiento.findById(id).populate('paciente','_id nombre')
+    res.status(200).json(tratamiento)
 }
 
 const registrarTratamiento = async (req,res)=>{
@@ -12,8 +16,12 @@ const registrarTratamiento = async (req,res)=>{
     const tratamiento = await Tratamiento.create(req.body)
     res.status(200).json({msg:`Registro exitoso del tratamiento ${tratamiento._id}`,tratamiento})
 }
-const actualizarTratamiento = (req,res)=>{
-    res.send("Actualizar tratamiento")
+const actualizarTratamiento =  async(req,res)=>{
+    const {id} = req.params
+    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, no existe el veterinario ${id}`});
+    await Tratamiento.findByIdAndUpdate(req.params.id,req.body)
+    res.status(200).json({msg:"Actualización exitosa del tratamiento"})
 }
 
 const eliminarTratamiento = async(req,res)=>{
